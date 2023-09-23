@@ -257,7 +257,7 @@ def train():
     )
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(
-        model_args.model_name_or_path,
+        "hf-internal-testing/llama-tokenizer",
         cache_dir=training_args.cache_dir,
         model_max_length=training_args.model_max_length,
         padding_side="right",
