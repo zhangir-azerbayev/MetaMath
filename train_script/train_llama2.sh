@@ -17,6 +17,7 @@
 
 # BYU cluster
 
+
 source /home/hailey81/miniconda3/bin/activate metainstruct
 
 which python
@@ -30,6 +31,7 @@ export PATH=$HOME/.local/bin:$PATH
 export TRANSFORMERS_OFFLINE=1
 export HF_DATASETS_OFFLINE=1
 
+cd /home/za2514/compute/instruct/MetaMath
 BASE_DIR=$(pwd)
 TRAIN_FILE=/nobackup/scratch/usr/za2514/instruct/MetaMathQA/MetaMath-40K.json
 MODEL=/nobackup/scratch/usr/za2514/downloaded-weights/llama-2_hf/Llama-2-7b-hf
