@@ -1,43 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name="llemma_metainstruct"
-# #SBATCH --account=dw87
-#SBATCH --comment="eleutherai"
-#SBATCH --qos=dw87
-#SBATCH --partition=dw
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=8
-#SBATCH --cpus-per-task=16
-#SBATCH --mem-per-cpu=8GB
-#SBATCH --gres=gpu:8
-#SBATCH --exclusive
-#SBATCH --open-mode=append
-#SBATCH --output=train_llama2_full_%j.out
-#SBATCH --error=train_llama2_full_%j.out
-#SBATCH --time=3-00:00:00
+source env_setup.sh
+cd ${BASE_DIR}
 
-# BYU cluster
-
-
-source /home/hailey81/miniconda3/bin/activate metainstruct
-
-which python
-
-export LD_LIBRARY_PATH=/home/hailey81/miniconda3/envs/metainstruct/lib/
-export PATH=/home/hailey81/cuda_install/bin:$PATH
-
-ln -s /home/hailey81/miniconda3/envs/metainstruct/bin/gcc/ ~/.local/bin/gcc
-export PATH=$HOME/.local/bin:$PATH
-
-export TRANSFORMERS_OFFLINE=1
-export HF_DATASETS_OFFLINE=1
-
-cd /home/za2514/compute/instruct/MetaMath
-BASE_DIR=$(pwd)
-TRAIN_FILE=/nobackup/scratch/usr/za2514/instruct/MetaMathQA/MetaMathQA-395K.json
-MODEL=/nobackup/scratch/usr/za2514/downloaded-weights/llama-2_hf/Llama-2-7b-hf
+MODEL=meta-llama/Llama-2-7b-hf
 CONFIG=${BASE_DIR}/deepspeed_config.json
 
-OUTDIR=./model/llama2_metainstruct_full
+OUTDIR=${BASE_DIR}/model/llama2_metainstruct_full
 
 NUM_STEPS=9258
 
