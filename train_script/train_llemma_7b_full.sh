@@ -11,8 +11,8 @@
 #SBATCH --gres=gpu:8
 #SBATCH --exclusive
 #SBATCH --open-mode=append
-#SBATCH --output=train_codellama_%j.out
-#SBATCH --error=train_codellama_%j.out
+#SBATCH --output=train_llemma_7b_full_%j.out
+#SBATCH --error=train_llemma_7b_full_%j.out
 #SBATCH --time=3-00:00:00
 
 # BYU cluster
@@ -33,19 +33,19 @@ export HF_DATASETS_OFFLINE=1
 
 cd /home/za2514/compute/instruct/MetaMath
 BASE_DIR=$(pwd)
-TRAIN_FILE=/nobackup/scratch/usr/za2514/instruct/MetaMathQA/MetaMath-40K.json
-MODEL=/home/za2514/compute/CodeLlama-7b-hf
+TRAIN_FILE=/nobackup/scratch/usr/za2514/instruct/MetaMathQA/MetaMathQA-395K.json
+MODEL=open-web-math/codellama_7b_200btok_step42000
 CONFIG=${BASE_DIR}/deepspeed_config.json
 
-OUTDIR=./model/codellama_metainstruct
+OUTDIR=./model/llemma_7b_metainstruct_full
 
-NUM_STEPS=938
+NUM_STEPS=9258
 
 deepspeed --include localhost:0,1,2,3,4,5,6,7  ${BASE_DIR}/train_math.py \
     --deepspeed ${CONFIG} \
     --model_name_or_path ${MODEL} \
     --data_path ${TRAIN_FILE} \
-    --data_length 40000 \
+    --data_length 395000 \
     --bf16 \
     --output_dir ${OUTDIR} \
     --max_steps ${NUM_STEPS} \

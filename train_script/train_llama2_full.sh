@@ -11,8 +11,8 @@
 #SBATCH --gres=gpu:8
 #SBATCH --exclusive
 #SBATCH --open-mode=append
-#SBATCH --output=train_llemma_%j.out
-#SBATCH --error=train_llemma_%j.out
+#SBATCH --output=train_llama2_full_%j.out
+#SBATCH --error=train_llama2_full_%j.out
 #SBATCH --time=3-00:00:00
 
 # BYU cluster
@@ -25,7 +25,7 @@ which python
 export LD_LIBRARY_PATH=/home/hailey81/miniconda3/envs/metainstruct/lib/
 export PATH=/home/hailey81/cuda_install/bin:$PATH
 
-ln -s /home/hailey81/miniconda3/envs/metainstruct-updated/bin/gcc/ ~/.local/bin/gcc
+ln -s /home/hailey81/miniconda3/envs/metainstruct/bin/gcc/ ~/.local/bin/gcc
 export PATH=$HOME/.local/bin:$PATH
 
 export TRANSFORMERS_OFFLINE=1
@@ -33,19 +33,19 @@ export HF_DATASETS_OFFLINE=1
 
 cd /home/za2514/compute/instruct/MetaMath
 BASE_DIR=$(pwd)
-TRAIN_FILE=/nobackup/scratch/usr/za2514/instruct/MetaMathQA/MetaMath-40K.json
-MODEL=open-web-math/codellama_7b_200btok_step42000
+TRAIN_FILE=/nobackup/scratch/usr/za2514/instruct/MetaMathQA/MetaMathQA-395K.json
+MODEL=/nobackup/scratch/usr/za2514/downloaded-weights/llama-2_hf/Llama-2-7b-hf
 CONFIG=${BASE_DIR}/deepspeed_config.json
 
-OUTDIR=./model/llemma_metainstruct
+OUTDIR=./model/llama2_metainstruct_full
 
-NUM_STEPS=938
+NUM_STEPS=9258
 
 deepspeed --include localhost:0,1,2,3,4,5,6,7  ${BASE_DIR}/train_math.py \
     --deepspeed ${CONFIG} \
     --model_name_or_path ${MODEL} \
     --data_path ${TRAIN_FILE} \
-    --data_length 40000 \
+    --data_length 395000 \
     --bf16 \
     --output_dir ${OUTDIR} \
     --max_steps ${NUM_STEPS} \
